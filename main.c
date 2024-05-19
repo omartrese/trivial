@@ -18,6 +18,7 @@ int FAILS = 0;
 
 int questionNumber = 1;                                              // variable para Pregunta nºx
 bool topicsCompleted[] = {false, false, false, false, false, false}; // Array que indica los tópicos marcados como completados
+bool isPlaying = true;
 
 // Estructuras de datos del tipo de estructura question los cuales almacenan todas las preguntas, posibles respuestas y respuestas correctas, además de bool que impide que se repitan entre ellas
 struct question sports[20] = {
@@ -250,7 +251,15 @@ int topicsLeft()
     return TOPICS_COUNT;
 }
 
-void questions(int topic) //Función encargada de utilizar las preguntas de las estructuras de datos de manera random
+void setTopicsUncompleted()
+{
+    for (size_t i = 0; i < 6; i++)
+    {
+        topicsCompleted[i] = false;
+    }
+}
+
+void questions(int topic) // Función encargada de utilizar las preguntas de las estructuras de datos de manera random
 {
     srand(time(NULL));
     struct question currentQuestion;
@@ -310,9 +319,9 @@ void questions(int topic) //Función encargada de utilizar las preguntas de las 
     }
     else if (topic == TVCINEMA && !topicsCompleted[TVCINEMA])
     {
-        if(allQuestionsCompleted(TVCINEMA))
+        if (allQuestionsCompleted(TVCINEMA))
         {
-            for(int i = 0; i < 20; i++)
+            for (int i = 0; i < 20; i++)
             {
                 tvcinema[i].isUsed = false;
             }
@@ -327,9 +336,9 @@ void questions(int topic) //Función encargada de utilizar las preguntas de las 
     }
     else if (topic == HISTORY && !topicsCompleted[HISTORY])
     {
-        if(allQuestionsCompleted(HISTORY))
+        if (allQuestionsCompleted(HISTORY))
         {
-            for(int i = 0; i < 20; i++)
+            for (int i = 0; i < 20; i++)
             {
                 history[i].isUsed = false;
             }
@@ -344,9 +353,9 @@ void questions(int topic) //Función encargada de utilizar las preguntas de las 
     }
     else if (topic == LITERATURE && !topicsCompleted[LITERATURE])
     {
-        if(allQuestionsCompleted(LITERATURE))
+        if (allQuestionsCompleted(LITERATURE))
         {
-            for(int i = 0; i < 20; i++)
+            for (int i = 0; i < 20; i++)
             {
                 literature[i].isUsed = false;
             }
@@ -467,7 +476,7 @@ void trivial(int topic)
         printf("PUNTUACIONES:\n");
         printf("Tu puntuación TOTAL: %d\n", SCORE);
         printf("Tus FALLOS: %d\n\n", FAILS);
-        printf("Gracias por jugar");
+        printf("Gracias por jugar\n\n");
         return;
     }
 
@@ -538,12 +547,34 @@ void menu()
     switch (option)
     {
     case 1:
+        SCORE = 0;
+        FAILS = 0;
+
+        questionNumber = 1;
+        setTopicsUncompleted();
+        sportsSuccesses = 0;
+        scienceSuccesses = 0;
+        musicartSuccesses = 0;
+        tvcinemaSuccesses = 0;
+        historySuccesses = 0;
+        literatureSuccesses = 0;
+
+        for (int i = 0; i < 20; i++)
+        {
+            sports[i].isUsed = false;
+            science[i].isUsed = false;
+            musicart[i].isUsed = false;
+            tvcinema[i].isUsed = false;
+            history[i].isUsed = false;
+            literature[i].isUsed = false;
+        }
+
         play();
         break;
 
     case 2:
         printf("Saliendo del juego...\n");
-        return;
+        isPlaying = false;
 
     default:
         return;
@@ -552,6 +583,7 @@ void menu()
 
 int main()
 {
-    menu();
+    while (isPlaying)
+        menu();
     return 0;
 }
